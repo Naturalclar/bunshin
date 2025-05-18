@@ -1,0 +1,4 @@
+{
+  "slackToken": "xoxp-your-token-here",
+  "defaultChannel": "C12345678"
+}
