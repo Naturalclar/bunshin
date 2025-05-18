@@ -1,6 +1,6 @@
 # Bunshin
 
-A simple CLI tool to send messages to Slack channels as yourself.
+A simple CLI tool to send messages to Slack channels as yourself. (Now in TypeScript!)
 
 ## Installation
 
@@ -12,6 +12,7 @@ npm install -g bunshin-slack
 git clone https://github.com/Naturalclar/bunshin.git
 cd bunshin
 bun install
+bun run build
 bun link
 ```
 
@@ -87,6 +88,20 @@ Configuration is loaded in the following order (later sources override earlier o
 3. Home directory `.bunshinrc` file
 
 ## Development
+
+```bash
+# Install dependencies
+bun install
+
+# Build the TypeScript code
+bun run build
+
+# Run in development mode with auto-reload
+bun run dev
+
+# Check TypeScript types
+bun run typecheck
+```
 
 ### Version Bumping
 
