@@ -1,0 +1,78 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - main
+    # Only trigger when package.json changes or when src files change or workflow files themselves
+    paths:
+      - 'package.json'
+      - 'src/**'
+      - '.github/workflows/publish.yml'
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js (for npm publishing)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check version change
+        id: check_version
+        run: |
+          # Get the version from package.json
+          CURRENT_VERSION=$(bun -e "console.log(require('./package.json').version)")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Get the latest version published to npm
+          PUBLISHED_VERSION=$(npm view bunshin-slack version 2>/dev/null || echo "0.0.0")
+          echo "Latest published version: $PUBLISHED_VERSION"
+
+          # Compare versions
+          if [ "$CURRENT_VERSION" != "$PUBLISHED_VERSION" ]; then
+            echo "New version detected: $CURRENT_VERSION (previously: $PUBLISHED_VERSION)"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+            echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "No version change detected, skipping publish"
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dependencies
+        if: steps.check_version.outputs.should_publish == 'true'
+        run: bun install
+
+      - name: Run tests
+        if: steps.check_version.outputs.should_publish == 'true'
+        run: bun test
+
+      - name: Publish to npm
+        if: steps.check_version.outputs.should_publish == 'true'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check_version.outputs.should_publish == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.check_version.outputs.current_version }}
+          release_name: Release v${{ steps.check_version.outputs.current_version }}
+          draft: false
+          prerelease: false

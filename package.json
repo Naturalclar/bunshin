@@ -8,9 +8,12 @@
     "bunshin": "./src/index.js"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "prepublishOnly": "npm test",
-    "test": "echo \"No tests yet\""
+    "start": "bun src/index.js",
+    "prepublishOnly": "bun test",
+    "test": "echo \"No tests yet\"",
+    "version:patch": "bun scripts/bump-version.js patch",
+    "version:minor": "bun scripts/bump-version.js minor",
+    "version:major": "bun scripts/bump-version.js major"
   },
   "dependencies": {
     "commander": "^13.1.0",
@@ -40,6 +43,7 @@
   },
   "files": [
     "src",
+    "scripts",
     "LICENSE",
     ".bunshinrc.example"
   ]

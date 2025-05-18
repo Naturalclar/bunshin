@@ -85,6 +85,37 @@ Configuration is loaded in the following order (later sources override earlier o
 2. Project-level `.bunshinrc` file
 3. Home directory `.bunshinrc` file
 
+## Development
+
+### Version Bumping
+
+To bump the version for a new release:
+
+```bash
+# Bump patch version (0.1.0 -> 0.1.1)
+bun run version:patch
+
+# Bump minor version (0.1.0 -> 0.2.0)
+bun run version:minor
+
+# Bump major version (0.1.0 -> 1.0.0)
+bun run version:major
+```
+
+### Continuous Integration
+
+This project uses GitHub Actions for CI/CD:
+
+- **Test workflow**: Runs on all pull requests and pushes to main
+- **Publish workflow**: Automatically publishes to npm when:
+  - Code is pushed to the main branch
+  - The version in package.json has changed since the last published version
+
+To enable automatic publishing:
+
+1. Generate an npm token with publish permissions
+2. Add it as a secret named `NPM_TOKEN` in your GitHub repository settings
+
 ## License
 
 MIT
