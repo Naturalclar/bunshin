@@ -10,6 +10,11 @@ on:
       - 'src/**'
       - '.github/workflows/publish.yml'
 
+# Add permissions needed for creating releases
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   publish:
     name: Publish to npm
