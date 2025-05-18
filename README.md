@@ -6,7 +6,7 @@ A simple CLI tool to send messages to Slack channels as yourself.
 
 ```bash
 # From npm
-npm install -g bunshin
+npm install -g bunshin-slack
 
 # Or from source
 git clone https://github.com/Naturalclar/bunshin.git
@@ -81,6 +81,7 @@ bunshin send --channel C12345678 "Your message here"
 ## Configuration Priority
 
 Configuration is loaded in the following order (later sources override earlier ones):
+
 1. Environment variables
 2. Project-level `.bunshinrc` file
 3. Home directory `.bunshinrc` file
@@ -119,3 +120,4 @@ To enable automatic publishing:
 ## License
 
 MIT
+
